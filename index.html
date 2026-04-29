@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kael e o Código Final — A Trilogia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:       #040710;
+  --deep:        #070d1f;
+  --blue:        #1a6bff;
+  --blue-glow:   #3d8bff;
+  --blue-bright: #7ab8ff;
+  --blue-pale:   #a8d4ff;
+  --gold:        #c8a96e;
+  --gold-pale:   #e8d5a3;
+  --white:       #e8f0ff;
+  --white-soft:  #c5d8f5;
+  --grid-line:   rgba(26,107,255,0.04);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  font-family: 'EB Garamond', Georgia, serif;
+  color: var(--white);
+  overflow-x: hidden;
+}
+
+/* ── BACKGROUND GRID ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 18px 40px;
+  background: linear-gradient(180deg, rgba(4,7,16,0.95) 0%, transparent 100%);
+  backdrop-filter: blur(6px);
+}
+
+.nav-logo {
+  font-family:'Cinzel',serif; font-size:13px;
+  letter-spacing:5px; color:var(--blue-pale);
+  text-transform:uppercase;
+}
+.nav-logo span { color:var(--blue-glow); }
+
+.nav-links { display:flex; gap:32px; }
+.nav-links a {
+  font-family:'Share Tech Mono',monospace; font-size:11px;
+  letter-spacing:3px; color:var(--white-soft); text-decoration:none;
+  opacity:.65; transition:opacity .2s, color .2s;
+  text-transform:uppercase;
+}
+.nav-links a:hover { opacity:1; color:var(--blue-bright); }
+
+/* ── HERO ── */
+.hero {
+  position:relative; z-index:1;
+  min-height:100vh;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding: 120px 24px 80px;
+  overflow:hidden;
+}
+
+.hero-bg {
+  position:absolute; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(26,107,255,0.13) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 20% 80%, rgba(26,107,255,0.06) 0%, transparent 60%),
+    linear-gradient(180deg, var(--black) 0%, #060c20 60%, var(--black) 100%);
+}
+
+/* scanlines */
+.hero-bg::after {
+  content:'';
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px
+  );
+  pointer-events:none;
+}
+
+.hero-orb {
+  position:absolute; z-index:0;
+  width:700px; height:700px; border-radius:50%;
+  background: radial-gradient(circle, rgba(26,107,255,0.11) 0%, transparent 65%);
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  animation: orb-pulse 5s ease-in-out infinite;
+}
+@keyframes orb-pulse {
+  0%,100%{opacity:.6; transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:1; transform:translate(-50%,-50%) scale(1.08)}
+}
+
+.hero-inner { position:relative; z-index:1; max-width:780px; }
+
+.hero-tag {
+  font-family:'Share Tech Mono',monospace; font-size:10px;
+  letter-spacing:5px; color:var(--blue); opacity:.75;
+  text-transform:uppercase; margin-bottom:32px;
+  animation: fade-in-up .8s ease both;
+}
+
+.hero-title {
+  font-family:'Cinzel',serif; font-weight:900;
+  font-size:clamp(58px, 10vw, 110px); line-height:.95;
+  letter-spacing:4px; color:var(--white);
+  text-shadow: 0 0 60px rgba(26,107,255,.35), 0 0 120px rgba(26,107,255,.12);
+  animation: fade-in-up .8s .15s ease both;
+}
+.hero-title .accent { color:var(--blue-glow); text-shadow:0 0 30px rgba(61,139,255,.7), 0 0 80px rgba(61,139,255,.3); }
+
+.hero-divider {
+  display:flex; align-items:center; gap:14px;
+  width:260px; margin:28px auto;
+  animation: fade-in-up .8s .3s ease both;
+}
+.hero-divider::before,.hero-divider::after {
+  content:''; flex:1; height:1px;
+  background:linear-gradient(90deg,transparent,var(--blue),transparent);
+}
+.gem {
+  width:9px; height:9px; border:1.5px solid var(--blue-glow);
+  transform:rotate(45deg);
+  box-shadow:0 0 10px var(--blue-glow), 0 0 20px rgba(61,139,255,.3);
+  animation: gem-blink 2.5s ease-in-out infinite;
+}
+@keyframes gem-blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+.hero-series {
+  font-family:'Cinzel',serif; font-size:12px;
+  letter-spacing:7px; color:var(--blue-pale);
+  text-transform:uppercase; margin-bottom:24px;
+  animation: fade-in-up .8s .35s ease both;
+}
+
+.hero-tagline {
+  font-size:clamp(17px,2.5vw,22px); font-style:italic;
+  color:var(--white-soft); line-height:1.75;
+  margin-bottom:48px; max-width:520px; margin-left:auto; margin-right:auto;
+  animation: fade-in-up .8s .45s ease both;
+}
+.hero-tagline em { color:var(--blue-bright); font-style:normal; }
+
+.hero-ctas {
+  display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+  animation: fade-in-up .8s .55s ease both;
+}
+
+.btn-primary {
+  display:inline-flex; align-items:center; gap:10px;
+  padding:16px 36px;
+  background: linear-gradient(135deg, var(--blue) 0%, #0a3fa0 100%);
+  border:1px solid rgba(61,139,255,.4);
+  color:var(--white); font-family:'Cinzel',serif;
+  font-size:12px; letter-spacing:3px; text-transform:uppercase;
+  text-decoration:none; cursor:pointer;
+  box-shadow: 0 0 20px rgba(26,107,255,.35), 0 4px 24px rgba(0,0,0,.5);
+  transition: all .25s ease;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--blue-glow) 0%, var(--blue) 100%);
+  box-shadow: 0 0 35px rgba(26,107,255,.6), 0 4px 32px rgba(0,0,0,.5);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  display:inline-flex; align-items:center; gap:10px;
+  padding:16px 36px;
+  background:transparent;
+  border:1px solid rgba(168,212,255,.25);
+  color:var(--white-soft); font-family:'Cinzel',serif;
+  font-size:12px; letter-spacing:3px; text-transform:uppercase;
+  text-decoration:none; cursor:pointer;
+  transition: all .25s ease;
+}
+.btn-secondary:hover {
+  border-color:rgba(168,212,255,.6);
+  color:var(--white);
+  transform: translateY(-2px);
+}
+
+@keyframes fade-in-up {
+  from { opacity:0; transform:translateY(22px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── TRILOGIA BADGE ── */
+.scroll-hint {
+  position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
+  font-family:'Share Tech Mono',monospace; font-size:9px;
+  letter-spacing:4px; color:var(--blue); opacity:.4;
+  z-index:1; animation: scroll-bounce 2s ease-in-out infinite;
+}
+@keyframes scroll-bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ── SECTION BASE ── */
+section { position:relative; z-index:1; }
+
+.section-tag {
+  font-family:'Share Tech Mono',monospace; font-size:9px;
+  letter-spacing:5px; color:var(--blue); opacity:.6;
+  text-transform:uppercase; margin-bottom:12px;
+}
+
+/* ── BOOKS SECTION ── */
+.books {
+  padding: 100px 24px;
+  background: linear-gradient(180deg, transparent 0%, rgba(7,13,31,.9) 30%, rgba(7,13,31,.9) 70%, transparent 100%);
+}
+
+.books-header {
+  text-align:center; max-width:600px; margin:0 auto 72px;
+}
+
+.books-header h2 {
+  font-family:'Cinzel',serif; font-size:clamp(26px,4vw,42px);
+  font-weight:900; letter-spacing:3px; color:var(--white);
+  text-shadow:0 0 30px rgba(26,107,255,.25);
+  margin-bottom:16px;
+}
+
+.books-header p {
+  font-size:17px; color:var(--white-soft); line-height:1.7; opacity:.8;
+}
+
+.books-grid {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
+  gap:32px; max-width:1100px; margin:0 auto;
+}
+
+.book-card {
+  position:relative;
+  border:1px solid rgba(26,107,255,.14);
+  background: linear-gradient(160deg, rgba(10,20,50,.7) 0%, rgba(4,7,16,.9) 100%);
+  overflow:hidden;
+  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.book-card:hover {
+  transform:translateY(-8px);
+  box-shadow:0 20px 60px rgba(26,107,255,.2), 0 0 0 1px rgba(61,139,255,.2);
+  border-color:rgba(61,139,255,.3);
+}
+
+.book-cover {
+  width:100%; aspect-ratio:2/3; overflow:hidden;
+  position:relative;
+}
+.book-cover img {
+  width:100%; height:100%; object-fit:cover;
+  object-position: center top;
+  display:block;
+  transition:transform .5s ease;
+}
+.book-card:hover .book-cover img { transform:scale(1.04); }
+
+/* fallback se imagem não carregar */
+.book-cover img[data-error] {
+  background: linear-gradient(160deg, #070d1f 0%, #040710 100%);
+}
+
+.book-cover-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(180deg, transparent 50%, rgba(4,7,16,.95) 100%);
+}
+
+.book-badge {
+  position:absolute; top:16px; right:16px;
+  font-family:'Share Tech Mono',monospace; font-size:9px;
+  letter-spacing:3px; padding:5px 10px;
+  border:1px solid;
+  text-transform:uppercase;
+}
+.badge-available {
+  color:var(--blue-bright); border-color:rgba(122,184,255,.4);
+  background:rgba(26,107,255,.12);
+}
+.badge-soon {
+  color:var(--gold-pale); border-color:rgba(200,169,110,.3);
+  background:rgba(200,169,110,.06);
+}
+.badge-wip {
+  color:rgba(168,212,255,.5); border-color:rgba(168,212,255,.15);
+  background:rgba(26,107,255,.04);
+}
+
+.book-info { padding:24px 24px 28px; }
+
+.book-num {
+  font-family:'Share Tech Mono',monospace; font-size:9px;
+  letter-spacing:4px; color:var(--blue); opacity:.6;
+  margin-bottom:6px;
+}
+
+.book-title {
+  font-family:'Cinzel',serif; font-size:20px; font-weight:700;
+  letter-spacing:1px; color:var(--white); margin-bottom:4px;
+  line-height:1.2;
+}
+
+.book-subtitle {
+  font-family:'EB Garamond',serif; font-size:13px;
+  font-style:italic; color:var(--blue-pale); opacity:.75;
+  letter-spacing:2px; text-transform:uppercase; margin-bottom:14px;
+}
+
+.book-desc {
+  font-size:15px; color:var(--white-soft); line-height:1.65;
+  opacity:.8; margin-bottom:20px;
+}
+
+.book-cta {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:11px 22px;
+  font-family:'Share Tech Mono',monospace; font-size:10px;
+  letter-spacing:3px; text-transform:uppercase; text-decoration:none;
+  border:1px solid rgba(26,107,255,.3); color:var(--blue-bright);
+  background:rgba(26,107,255,.06);
+  transition:all .2s;
+}
+.book-cta:hover {
+  background:rgba(26,107,255,.2); border-color:var(--blue-glow);
+  color:var(--white);
+}
+.book-cta-disabled {
+  opacity:.35; pointer-events:none;
+  border-color:rgba(168,212,255,.1); color:var(--white-soft);
+  background:transparent;
+}
+
+/* ── ISCA / LEAD MAGNET ── */
+.lead-magnet {
+  padding:100px 24px;
+  position:relative;
+}
+
+.lead-magnet::before {
+  content:'';
+  position:absolute; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 50%, rgba(26,107,255,0.07) 0%, transparent 70%);
+}
+
+.lm-container {
+  position:relative; z-index:1;
+  max-width:860px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:60px; align-items:center;
+}
+
+.lm-text .section-tag { margin-bottom:14px; }
+
+.lm-text h2 {
+  font-family:'Cinzel',serif; font-size:clamp(24px,4vw,38px);
+  font-weight:900; letter-spacing:2px; line-height:1.15;
+  color:var(--white); margin-bottom:20px;
+  text-shadow:0 0 30px rgba(26,107,255,.2);
+}
+.lm-text h2 span { color:var(--blue-glow); }
+
+.lm-text p {
+  font-size:17px; color:var(--white-soft); line-height:1.75;
+  margin-bottom:16px; opacity:.85;
+}
+
+.lm-perks { margin:24px 0 32px; display:flex; flex-direction:column; gap:10px; }
+
+.lm-perk {
+  display:flex; align-items:flex-start; gap:12px;
+  font-size:15px; color:var(--white-soft); line-height:1.5;
+}
+.lm-perk-icon {
+  flex-shrink:0; width:20px; height:20px;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid rgba(61,139,255,.3); transform:rotate(45deg);
+  box-shadow:0 0 8px rgba(61,139,255,.2);
+  margin-top:2px;
+}
+.lm-perk-icon::after {
+  content:''; width:6px; height:6px;
+  background:var(--blue-glow); display:block;
+  box-shadow:0 0 6px var(--blue-glow);
+}
+
+/* MailerLite form container */
+.lm-form-box {
+  background: linear-gradient(160deg, rgba(10,20,50,.8) 0%, rgba(4,7,16,.95) 100%);
+  border:1px solid rgba(26,107,255,.18);
+  padding:40px 36px;
+  position:relative;
+  box-shadow:0 0 40px rgba(26,107,255,.06);
+}
+
+.lm-form-box::before {
+  content:'// ACESSO_LIBERADO :: CAPÍTULO_01';
+  font-family:'Share Tech Mono',monospace; font-size:8px;
+  letter-spacing:2px; color:var(--blue);
+  position:absolute; top:-10px; left:20px;
+  background:var(--black); padding:0 10px; opacity:.7;
+}
+
+.lm-form-box h3 {
+  font-family:'Cinzel',serif; font-size:18px; font-weight:700;
+  letter-spacing:2px; color:var(--white); margin-bottom:8px;
+}
+
+.lm-form-box .sub {
+  font-family:'Share Tech Mono',monospace; font-size:11px;
+  letter-spacing:2px; color:var(--blue-pale); opacity:.6;
+  margin-bottom:28px; display:block;
+}
+
+/* MailerLite embed customization */
+#mlb2-form .ml-form-embedWrapper {
+  background:transparent !important;
+}
+
+/* Custom form styles (fallback if MailerLite not connected) */
+.form-field {
+  width:100%; margin-bottom:14px;
+}
+.form-field input {
+  width:100%; padding:13px 16px;
+  background:rgba(4,7,16,.8);
+  border:1px solid rgba(26,107,255,.2);
+  color:var(--white);
+  font-family:'EB Garamond',serif; font-size:16px;
+  outline:none; transition:border-color .2s;
+}
+.form-field input::placeholder { color:rgba(197,216,245,.3); }
+.form-field input:focus { border-color:rgba(61,139,255,.5); }
+
+.form-submit {
+  width:100%; padding:15px;
+  background:linear-gradient(135deg, var(--blue) 0%, #0a3fa0 100%);
+  border:1px solid rgba(61,139,255,.4); color:var(--white);
+  font-family:'Cinzel',serif; font-size:12px; letter-spacing:3px;
+  text-transform:uppercase; cursor:pointer;
+  box-shadow:0 0 20px rgba(26,107,255,.3);
+  transition:all .25s;
+}
+.form-submit:hover {
+  background:linear-gradient(135deg, var(--blue-glow) 0%, var(--blue) 100%);
+  box-shadow:0 0 35px rgba(26,107,255,.5);
+}
+
+.form-privacy {
+  font-family:'Share Tech Mono',monospace; font-size:9px;
+  letter-spacing:2px; color:var(--blue-pale); opacity:.35;
+  text-align:center; margin-top:14px; line-height:1.6;
+}
+
+/* ── SINOPSE ── */
+.sinopse {
+  padding:100px 24px;
+  background:linear-gradient(180deg, transparent 0%, rgba(7,13,31,.7) 30%, rgba(7,13,31,.7) 70%, transparent 100%);
+}
+
+.sinopse-inner {
+  max-width:900px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 2fr; gap:64px; align-items:start;
+}
+
+.sinopse-label { position:sticky; top:120px; }
+
+.sinopse-label h2 {
+  font-family:'Cinzel',serif; font-size:clamp(22px,3.5vw,36px);
+  font-weight:900; letter-spacing:2px; color:var(--white);
+  text-shadow:0 0 25px rgba(26,107,255,.2);
+  line-height:1.2; margin-bottom:16px;
+}
+.sinopse-label h2 span { display:block; color:var(--gold); }
+
+.sinopse-rule {
+  width:40px; height:2px;
+  background:linear-gradient(90deg, var(--blue), transparent);
+  box-shadow:0 0 7px var(--blue);
+}
+
+.sinopse-content blockquote {
+  font-size:clamp(17px,2vw,20px); font-style:italic;
+  color:var(--blue-bright); line-height:1.7;
+  padding-left:20px;
+  border-left:2px solid rgba(61,139,255,.3);
+  margin-bottom:28px;
+}
+
+.sinopse-content p {
+  font-size:clamp(16px,1.8vw,18px); color:var(--white-soft);
+  line-height:1.85; margin-bottom:18px; opacity:.9;
+}
+
+.sinopse-content p em { color:var(--white); font-style:italic; }
+
+.sinopse-code {
+  font-family:'Share Tech Mono',monospace; font-size:11px;
+  letter-spacing:3px; color:var(--blue-glow);
+  border:1px solid rgba(26,107,255,.2);
+  background:rgba(10,22,60,.4);
+  padding:14px 18px; margin-top:28px;
+  text-align:center;
+  animation: flicker 6s ease-in-out infinite;
+}
+@keyframes flicker{0%,93%,100%{opacity:1}94%{opacity:.5}96%{opacity:.3}98%{opacity:.85}}
+
+/* ── SOBRE O AUTOR ── */
+.autor {
+  padding:80px 24px;
+  position:relative;
+}
+
+.autor-inner {
+  max-width:700px; margin:0 auto; text-align:center;
+}
+
+.autor-gem {
+  display:flex; align-items:center; gap:16px;
+  margin-bottom:32px; justify-content:center;
+}
+.autor-gem::before,.autor-gem::after {
+  content:''; width:60px; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(26,107,255,.3));
+}
+.autor-gem::after { transform:scaleX(-1); }
+
+.autor-inner h2 {
+  font-family:'Cinzel',serif; font-size:clamp(18px,3vw,28px);
+  letter-spacing:3px; color:var(--gold-pale); margin-bottom:6px;
+}
+
+.autor-inner .role {
+  font-family:'Share Tech Mono',monospace; font-size:10px;
+  letter-spacing:4px; color:var(--blue); opacity:.6;
+  margin-bottom:28px; display:block;
+}
+
+.autor-inner p {
+  font-size:17px; color:var(--white-soft); line-height:1.8; opacity:.8;
+}
+
+/* ── TRILOGIA TIMELINE ── */
+.timeline {
+  padding:100px 24px;
+}
+
+.timeline-inner {
+  max-width:800px; margin:0 auto;
+}
+
+.timeline-header {
+  text-align:center; margin-bottom:60px;
+}
+
+.timeline-header h2 {
+  font-family:'Cinzel',serif; font-size:clamp(22px,3.5vw,36px);
+  font-weight:900; letter-spacing:3px; color:var(--white);
+  text-shadow:0 0 25px rgba(26,107,255,.2); margin-bottom:12px;
+}
+
+.tl-items { display:flex; flex-direction:column; gap:0; }
+
+.tl-item {
+  display:grid; grid-template-columns:100px 1px 1fr;
+  gap:0 28px; align-items:start;
+}
+
+.tl-num {
+  font-family:'Cinzel',serif; font-size:42px; font-weight:900;
+  color:rgba(26,107,255,.15); line-height:1;
+  text-align:right; padding-top:4px;
+}
+.tl-item.active .tl-num { color:rgba(61,139,255,.5); }
+
+.tl-line {
+  width:1px; background:rgba(26,107,255,.15);
+  margin:8px 0; position:relative;
+}
+.tl-item.active .tl-line { background:rgba(61,139,255,.35); }
+
+.tl-dot {
+  position:absolute; top:0; left:50%;
+  transform:translate(-50%, 0);
+  width:9px; height:9px; border:1.5px solid var(--blue-glow);
+  transform-origin:center; transform:translate(-50%,-1px) rotate(45deg);
+  box-shadow:0 0 8px var(--blue-glow);
+  background:var(--deep);
+}
+
+.tl-content { padding:4px 0 44px 0; }
+
+.tl-content h3 {
+  font-family:'Cinzel',serif; font-size:18px; font-weight:600;
+  letter-spacing:1.5px; color:var(--white); margin-bottom:4px;
+}
+.tl-content .tl-sub {
+  font-family:'Share Tech Mono',monospace; font-size:10px;
+  letter-spacing:3px; color:var(--blue-pale); opacity:.6;
+  margin-bottom:10px; display:block; text-transform:uppercase;
+}
+.tl-content p {
+  font-size:15px; color:var(--white-soft); line-height:1.65; opacity:.75;
+}
+
+/* ── DEPOIMENTO / QUOTE ── */
+.quote-section {
+  padding:80px 24px;
+  text-align:center; position:relative;
+}
+
+.quote-section::before {
+  content:'';
+  position:absolute; inset:0; z-index:0;
+  background:radial-gradient(ellipse 60% 80% at 50% 50%, rgba(26,107,255,.05) 0%, transparent 70%);
+}
+
+.quote-inner {
+  position:relative; z-index:1;
+  max-width:640px; margin:0 auto;
+}
+
+.big-quote {
+  font-family:'Cinzel',serif; font-size:100px; font-weight:900;
+  color:var(--blue); opacity:.08; line-height:.7;
+  position:absolute; top:-10px; left:-10px;
+}
+
+blockquote.main-quote {
+  font-family:'EB Garamond',serif; font-size:clamp(20px,3vw,28px);
+  font-style:italic; color:var(--white-soft); line-height:1.7;
+  margin-bottom:24px; position:relative; z-index:1;
+}
+
+.quote-attr {
+  font-family:'Share Tech Mono',monospace; font-size:10px;
+  letter-spacing:4px; color:var(--blue-pale); opacity:.5;
+}
+
+/* ── AMAZON CTA ── */
+.amazon-cta {
+  padding:80px 24px 100px;
+  text-align:center;
+  background:linear-gradient(180deg, transparent 0%, rgba(7,13,31,.8) 50%, var(--black) 100%);
+}
+
+.amazon-inner {
+  max-width:600px; margin:0 auto;
+}
+
+.amazon-inner h2 {
+  font-family:'Cinzel',serif; font-size:clamp(24px,4vw,40px);
+  font-weight:900; letter-spacing:3px; color:var(--white);
+  text-shadow:0 0 35px rgba(26,107,255,.3);
+  margin-bottom:16px;
+}
+
+.amazon-inner p {
+  font-size:17px; color:var(--white-soft); line-height:1.7;
+  margin-bottom:40px; opacity:.8;
+}
+
+.amazon-platforms {
+  display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
+  margin-bottom:32px;
+}
+
+.platform-tag {
+  font-family:'Share Tech Mono',monospace; font-size:10px;
+  letter-spacing:3px; padding:8px 16px;
+  border:1px solid rgba(26,107,255,.2); color:var(--blue-pale);
+  opacity:.6;
+}
+
+.btn-amazon {
+  display:inline-flex; align-items:center; gap:12px;
+  padding:18px 48px;
+  background:linear-gradient(135deg, #ff9900 0%, #e07000 100%);
+  border:none; color:#0a0a0a;
+  font-family:'Cinzel',serif; font-size:13px;
+  letter-spacing:3px; text-transform:uppercase;
+  text-decoration:none; cursor:pointer;
+  box-shadow:0 0 30px rgba(255,153,0,.25), 0 4px 24px rgba(0,0,0,.5);
+  font-weight:700; transition:all .25s;
+}
+.btn-amazon:hover {
+  background:linear-gradient(135deg, #ffaa20 0%, #ff9900 100%);
+  box-shadow:0 0 50px rgba(255,153,0,.4), 0 4px 32px rgba(0,0,0,.5);
+  transform:translateY(-2px);
+}
+
+/* ── FOOTER ── */
+footer {
+  position:relative; z-index:1;
+  border-top:1px solid rgba(26,107,255,.08);
+  padding:40px 24px;
+  text-align:center;
+}
+
+.footer-logo {
+  font-family:'Cinzel',serif; font-size:11px;
+  letter-spacing:5px; color:var(--blue-pale); opacity:.35;
+  margin-bottom:12px;
+}
+
+.footer-copy {
+  font-family:'Share Tech Mono',monospace; font-size:9px;
+  letter-spacing:3px; color:var(--white-soft); opacity:.2;
+}
+
+.footer-code {
+  font-family:'Share Tech Mono',monospace; font-size:8px;
+  letter-spacing:2px; color:var(--blue); opacity:.12;
+  margin-top:16px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding:16px 20px; }
+  .nav-links { gap:16px; }
+  .nav-links a { font-size:9px; letter-spacing:2px; }
+
+  .lm-container { grid-template-columns:1fr; gap:40px; }
+  .sinopse-inner { grid-template-columns:1fr; gap:32px; }
+  .sinopse-label { position:static; }
+
+  .tl-item { grid-template-columns:60px 1px 1fr; gap:0 16px; }
+  .tl-num { font-size:28px; }
+
+  .hero-ctas { flex-direction:column; align-items:center; }
+  .btn-primary, .btn-secondary { width:260px; justify-content:center; }
+}
+
+@media (max-width:480px) {
+  .nav-links { display:none; }
+  .lm-form-box { padding:28px 20px; }
+}
+
+/* ── SCROLL ANIMATIONS ── */
+.reveal {
+  opacity:0; transform:translateY(30px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.visible {
+  opacity:1; transform:translateY(0);
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">KAEL <span>&</span> O CÓDIGO FINAL</div>
+  <div class="nav-links">
+    <a href="#livros">Livros</a>
+    <a href="#sinopse">Sinopse</a>
+    <a href="#capitulo">Capítulo Grátis</a>
+    <a href="#amazon">Comprar</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-orb"></div>
+  <div class="hero-inner">
+    <p class="hero-tag">// trilogia_iniciada :: sistema_ativo</p>
+    <h1 class="hero-title">
+      KAEL<br>
+      <span class="accent">E O</span><br>
+      CÓDIGO<br>FINAL
+    </h1>
+    <div class="hero-divider"><div class="gem"></div></div>
+    <p class="hero-series">Trilogia · Ficção Científica</p>
+    <p class="hero-tagline">
+      Alguns códigos não querem ser corrigidos.<br>
+      Eles querem ser <em>lembrados</em>.
+    </p>
+    <div class="hero-ctas">
+      <a href="#capitulo" class="btn-primary">↓ &nbsp; Ler Capítulo Grátis</a>
+      <a href="#amazon" class="btn-secondary">Comprar na Amazon</a>
+    </div>
+  </div>
+  <div class="scroll-hint">▼ &nbsp; SCROLL &nbsp; ▼</div>
+</section>
+
+<!-- LIVROS -->
+<section class="books" id="livros">
+  <div class="books-header reveal">
+    <p class="section-tag">// trilogia :: três_volumes</p>
+    <h2>A Trilogia Completa</h2>
+    <p>Uma saga de ficção científica ambientada em São Paulo, onde a linha entre código e consciência começa a se apagar.</p>
+  </div>
+
+  <div class="books-grid">
+
+    <!-- Livro 1 -->
+    <div class="book-card reveal">
+      <div class="book-cover">
+        <img src="Livro_1_Capa_5.jpg" alt="Kael e o Código Final — O Erro que Respira">
+        <div class="book-cover-overlay"></div>
+        <div class="book-badge badge-available">● Disponível</div>
+      </div>
+      <div class="book-info">
+        <p class="book-num">// livro_01</p>
+        <h3 class="book-title">Kael e o Código Final</h3>
+        <p class="book-subtitle">O Erro que Respira</p>
+        <p class="book-desc">Kael vê o mundo reiniciar. Um glitch. Uma mensagem criptografada. Uma parede que cede como véu. O sistema está quebrado — e ele é o erro que aprendeu a respirar.</p>
+        <a href="https://www.amazon.com.br/dp/B0GYQMGNYK" target="_blank" class="book-cta">Ler na Amazon →</a>
+      </div>
+    </div>
+
+    <!-- Livro 2 -->
+    <div class="book-card reveal">
+      <div class="book-cover">
+        <img src="Livro_2_Capa_2.jpg" alt="Kael e o Código Final II — O Protocolo da Alma">
+        <div class="book-cover-overlay"></div>
+        <div class="book-badge badge-soon">⏳ Em breve</div>
+      </div>
+      <div class="book-info">
+        <p class="book-num">// livro_02</p>
+        <h3 class="book-title">Kael e o Código Final II</h3>
+        <p class="book-subtitle">O Protocolo da Alma</p>
+        <p class="book-desc">O que está além da parede que girou? Um protocolo antigo desperta. Entre máquinas e divindades, Kael descobre que todo sistema tem um criador — e todo criador, um erro.</p>
+        <span class="book-cta book-cta-disabled">Em Finalização →</span>
+      </div>
+    </div>
+
+    <!-- Livro 3 -->
+    <div class="book-card reveal">
+      <div class="book-cover">
+        <img src="Livro_3_Capa_1.jpg" alt="Kael e o Código Final III — Além do Protocolo">
+        <div class="book-cover-overlay"></div>
+        <div class="book-badge badge-wip">◌ Em Escrita</div>
+      </div>
+      <div class="book-info">
+        <p class="book-num">// livro_03</p>
+        <h3 class="book-title">Kael e o Código Final III</h3>
+        <p class="book-subtitle">Além do Protocolo</p>
+        <p class="book-desc">A entidade que comanda tudo tem um nome. Kael não apenas lê o código — ele se torna a chave. O desfecho de uma trilogia que une ciência, mitologia e a questão que não cala.</p>
+        <span class="book-cta book-cta-disabled">Em Escrita →</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote-section reveal">
+  <div class="quote-inner">
+    <div class="big-quote">"</div>
+    <blockquote class="main-quote">
+      Não foi um desmaio. Não foi alucinação.<br>
+      Foi pior. <em>Foi lógico.</em>
+    </blockquote>
+    <p class="quote-attr">— Kael, Livro 1 · Capítulo I</p>
+  </div>
+</section>
+
+<!-- SINOPSE -->
+<section class="sinopse" id="sinopse">
+  <div class="sinopse-inner">
+    <div class="sinopse-label reveal">
+      <p class="section-tag">// sobre_o_livro</p>
+      <h2>O Erro <span>que</span> Respira</h2>
+      <div class="sinopse-rule"></div>
+    </div>
+    <div class="sinopse-content reveal">
+      <blockquote>
+        "A água: morna, ritmada, como uma linha contínua de código. A toalha: dobrada em triângulo. Tudo no seu lugar."
+      </blockquote>
+      <p>Kael é um <em>lead developer</em> na NeuroSync, uma empresa de IA aplicada à neurotecnologia em São Paulo. Metódico, racional, acredita que o caos começa quando você muda a rotina.</p>
+      <p>Mas há falhas que a rotina não consegue esconder. Um reflexo que se move antes dele. Uma mensagem de origem desconhecida. O horário 11:11 em todo relógio que olha. E uma parede de tijolos que cede — não como pedra, mas como um véu.</p>
+      <p>O que parecia ser um erro no sistema é, na verdade, um chamado. E Kael é a única pessoa que consegue ver.</p>
+      <div class="sinopse-code">01000101 01010010 01010010 01001111 &nbsp;·&nbsp; BUG_DETECTADO &nbsp;·&nbsp; 11:11</div>
+    </div>
+  </div>
+</section>
+
+<!-- LEAD MAGNET -->
+<section class="lead-magnet" id="capitulo">
+  <div class="lm-container">
+
+    <div class="lm-text reveal">
+      <p class="section-tag">// acesso_gratuito</p>
+      <h2>Leia o <span>Capítulo 1</span><br>Agora, de Graça</h2>
+      <p>Antes de comprar, experimente. Receba os primeiros capítulos de <em>Kael e o Código Final</em> diretamente no seu e-mail — no mesmo formato elegante e imersivo do livro.</p>
+
+      <div class="lm-perks">
+        <div class="lm-perk">
+          <div class="lm-perk-icon"></div>
+          <span>PDF com design exclusivo, idêntico ao livro publicado</span>
+        </div>
+        <div class="lm-perk">
+          <div class="lm-perk-icon"></div>
+          <span>Entregue imediatamente no seu e-mail</span>
+        </div>
+        <div class="lm-perk">
+          <div class="lm-perk-icon"></div>
+          <span>Seja avisado em primeira mão do lançamento do Livro 2</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lm-form-box reveal">
+      <h3>Acesse o Capítulo Grátis</h3>
+      <span class="sub">// sem_spam :: cancele_quando_quiser</span>
+
+      <!-- =========================================================
+           SUBSTITUIR PELO EMBED DO MAILERLITE
+           1. Acesse app.mailerlite.com → Forms → Embedded Forms
+           2. Crie um formulário, copie o código HTML e cole aqui
+           3. Apague o formulário manual abaixo (div#form-manual)
+           ========================================================= -->
+
+      <!-- INÍCIO: Formulário manual (placeholder até conectar MailerLite) -->
+      <div id="form-manual">
+        <div class="form-field">
+          <input type="text" placeholder="Seu nome" name="name" autocomplete="off">
+        </div>
+        <div class="form-field">
+          <input type="email" placeholder="Seu melhor e-mail" name="email" autocomplete="off">
+        </div>
+        <button class="form-submit" onclick="alert('Conecte o MailerLite aqui!')">
+          Enviar o Capítulo Grátis →
+        </button>
+      </div>
+      <!-- FIM: Formulário manual -->
+
+      <p class="form-privacy">Seus dados são protegidos. &nbsp;·&nbsp; Sem spam. Prometido.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- TIMELINE DA TRILOGIA -->
+<section class="timeline">
+  <div class="timeline-inner">
+    <div class="timeline-header reveal">
+      <p class="section-tag">// status_da_trilogia</p>
+      <h2>A Jornada de Kael</h2>
+    </div>
+
+    <div class="tl-items">
+
+      <div class="tl-item active reveal">
+        <div class="tl-num">I</div>
+        <div class="tl-line"><div class="tl-dot"></div></div>
+        <div class="tl-content">
+          <h3>O Erro que Respira</h3>
+          <span class="tl-sub">// publicado · disponível na Amazon Kindle Unlimited</span>
+          <p>Kael descobre que a realidade tem falhas — e que ele é a única pessoa que consegue ver. Uma mensagem criptografada. Uma parede que gira. O início de tudo.</p>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-num">II</div>
+        <div class="tl-line"><div class="tl-dot"></div></div>
+        <div class="tl-content">
+          <h3>O Protocolo da Alma</h3>
+          <span class="tl-sub">// em finalização · lançamento previsto em breve</span>
+          <p>Por trás da parede existe um protocolo. Kael encontra outros que viram o glitch. Mas nem todos estão do mesmo lado.</p>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-num">III</div>
+        <div class="tl-line"></div>
+        <div class="tl-content">
+          <h3>Além do Protocolo</h3>
+          <span class="tl-sub">// em escrita · último volume da trilogia</span>
+          <p>A verdade sobre o Código Final. O nome da entidade. O desfecho de uma saga que une tecnologia, espiritualidade e a pergunta que toda consciência faz.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- AUTOR -->
+<section class="autor reveal">
+  <div class="autor-inner">
+    <div class="autor-gem"><div class="gem"></div></div>
+    <h2>Luiz Paulo Gonçalves do Nascimento</h2>
+    <span class="role">// autor · ficção científica</span>
+    <p>Escritor brasileiro, criador da trilogia <em>Kael e o Código Final</em>. Uma história que nasceu da observação do mundo moderno — onde a linha entre algoritmo e alma é cada vez mais difícil de enxergar.</p>
+  </div>
+</section>
+
+<!-- AMAZON CTA -->
+<section class="amazon-cta" id="amazon">
+  <div class="amazon-inner reveal">
+    <p class="section-tag">// comprar_agora</p>
+    <h2>Comece a Leitura Hoje</h2>
+    <p>O Livro 1 já está disponível na Amazon — inclusive no <strong>Kindle Unlimited</strong>. Leia sem custo adicional se você já tem a assinatura.</p>
+
+    <div class="amazon-platforms">
+      <span class="platform-tag">Kindle</span>
+      <span class="platform-tag">Kindle Unlimited</span>
+      <span class="platform-tag">eBook</span>
+    </div>
+
+    <a href="https://www.amazon.com.br/dp/B0GYQMGNYK" target="_blank" class="btn-amazon">
+      &#x1F6CD; &nbsp; Comprar na Amazon
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-logo">KAEL E O CÓDIGO FINAL &nbsp;·&nbsp; TRILOGIA</p>
+  <p class="footer-copy">© 2025 Luiz Paulo Gonçalves do Nascimento &nbsp;·&nbsp; Todos os direitos reservados</p>
+  <p class="footer-code">01000101 01010010 01010010 01001111 &nbsp;·&nbsp; 11:11 &nbsp;·&nbsp; BUG_DETECTADO</p>
+</footer>
+
+<script>
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => observer.observe(el));
+
+// Image error handling — show placeholder if cover not found
+document.querySelectorAll('.book-cover img').forEach(img => {
+  img.onerror = function() {
+    this.setAttribute('data-error','true');
+    this.style.display = 'none';
+    const cover = this.closest('.book-cover');
+    cover.style.background = 'linear-gradient(160deg,#070d1f 0%,#040710 100%)';
+    const ph = document.createElement('div');
+    ph.style.cssText = 'display:flex;align-items:center;justify-content:center;height:100%;font-family:Share Tech Mono,monospace;font-size:10px;letter-spacing:3px;color:rgba(122,184,255,.3);text-align:center;padding:20px;';
+    ph.textContent = '[ COVER_NOT_FOUND ]';
+    cover.appendChild(ph);
+  };
+});
+</script>
+
+</body>
+</html>
