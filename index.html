@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kael e o Código Final — A Trilogia</title>
+<!-- MailerLite Universal -->
+<script>
+(function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+.push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+(window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+ml('account', '2307994');
+</script>
+<!-- End MailerLite Universal -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
@@ -928,19 +937,16 @@ footer {
            3. Apague o formulário manual abaixo (div#form-manual)
            ========================================================= -->
 
-      <!-- INÍCIO: Formulário manual (placeholder até conectar MailerLite) -->
-      <div id="form-manual">
-        <div class="form-field">
-          <input type="text" placeholder="Seu nome" name="name" autocomplete="off">
-        </div>
-        <div class="form-field">
-          <input type="email" placeholder="Seu melhor e-mail" name="email" autocomplete="off">
-        </div>
-        <button class="form-submit" onclick="alert('Conecte o MailerLite aqui!')">
-          Enviar o Capítulo Grátis →
+      <!-- Formulário MailerLite (popup) -->
+      <div id="form-manual" style="text-align:center; padding: 12px 0 8px;">
+        <p style="font-size:15px; color:var(--white-soft); opacity:.7; line-height:1.7; margin-bottom:28px;">
+          Clique abaixo, informe seu nome e e-mail — o capítulo chega na sua caixa de entrada em instantes.
+        </p>
+        <button class="ml-onclick-form form-submit" onclick="ml('show', '4QzpvJ', true)"
+          style="width:100%; font-size:13px; letter-spacing:3px;">
+          ↓ &nbsp; Quero o Capítulo Grátis
         </button>
       </div>
-      <!-- FIM: Formulário manual -->
 
       <p class="form-privacy">Seus dados são protegidos. &nbsp;·&nbsp; Sem spam. Prometido.</p>
     </div>
